@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model Teacher {
+  id       String   @id @default(cuid())
+
+  email    String   @unique
+  firstName String
+  lastName String
+
+  subjects Subject[]
+
+  @@map("teacher")  
+}
+
+model Subject {
+  id       String   @id @default(cuid())
+
+  name     String
+
+  teacher Teacher[]
+  classes SchoolClass[]
+
+  @@map("subject")
+}
+
+model SchoolClass {
+  id       String   @id @default(cuid())
+
+  name     String
+  year     Int
+
+  subjectId String
+
+  students Student[]
+  grades Grade[]
+  schoolDays SchoolDay[]
+  studentFrequencies StudentFrequency[]
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  @@map("class")
+}
+
+
+model Student {
+  id       String   @id @default(cuid())
+
+  firstName String
+  lastName String
+
+  classId String
+
+  grades Grade[]
+  studentFrequencies StudentFrequency[]
+  schoolClass SchoolClass @relation(fields: [classId], references: [id])
+
+  @@map("student")
+}
+
+model Grade {
+  id       String   @id @default(cuid())
+
+  value    Float
+  date     DateTime
+
+  studentId String
+  classId String
+
+  student Student @relation(fields: [studentId], references: [id])
+  subject SchoolClass @relation(fields: [classId], references: [id])
+
+  @@map("grade")
+}
+
+model SchoolDay {
+  id       String   @id @default(cuid())
+
+  date     DateTime
+  classId String
+
+  schoolClass SchoolClass @relation(fields: [classId], references: [id])
+
+  frequency StudentFrequency[]
+
+  @@map("school_day")
+}
+
+model StudentFrequency {
+  id       String   @id @default(cuid())
+
+  schoolDayId String
+  classId String
+  studentId String
+
+  schoolDay SchoolDay @relation(fields: [schoolDayId], references: [id])
+  schoolClass SchoolClass @relation(fields: [classId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@map("student_frequency")
+}
