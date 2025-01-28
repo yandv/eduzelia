@@ -1,0 +1,19 @@
+meta {
+  name: Criar turma
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/api/professor/cm6frrxa6000008lbeeqh03j2/turmas/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "102",
+    "ano": 2025,
+    "professorId":"cm6frrxa6000008lbeeqh03j2"
+  }
+}

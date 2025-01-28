@@ -13,100 +13,96 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Teacher {
-  id       String   @id @default(cuid())
+model Professor {
+  id String @id @default(cuid())
 
-  email    String   @unique
-  firstName String
-  lastName String
+  nome String
 
-  subjects Subject[]
+  turmas Turma[]
+  aulas  Aula[]
 
-  @@map("teacher")  
+  @@map("professor")
 }
 
-model Subject {
-  id       String   @id @default(cuid())
+model Aluno {
+  id String @id @default(cuid())
 
-  name     String
+  nome String
 
-  teacher Teacher[]
-  classes SchoolClass[]
+  AlunoTurma AlunoTurma[]
 
-  @@map("subject")
+  @@map("aluno")
 }
 
-model SchoolClass {
-  id       String   @id @default(cuid())
+model AlunoTurma {
+  id String @id @default(cuid())
 
-  name     String
-  year     Int
+  alunoId String
+  turmaId String
 
-  subjectId String
+  notas       Nota[]
+  frequencias Frequencia[]
 
-  students Student[]
-  grades Grade[]
-  schoolDays SchoolDay[]
-  studentFrequencies StudentFrequency[]
-  subject Subject @relation(fields: [subjectId], references: [id])
+  aluno Aluno @relation(fields: [alunoId], references: [id])
+  turma Turma @relation(fields: [turmaId], references: [id])
 
-  @@map("class")
+  @@unique([alunoId, turmaId])
+  @@map("aluno_turma")
 }
 
+model Turma {
+  id String @id @default(cuid())
 
-model Student {
-  id       String   @id @default(cuid())
+  nome        String
+  ano         Int
+  professorId String
+  professor   Professor @relation(fields: [professorId], references: [id])
 
-  firstName String
-  lastName String
+  aulas      Aula[]
+  AlunoTurma AlunoTurma[]
 
-  classId String
-
-  grades Grade[]
-  studentFrequencies StudentFrequency[]
-  schoolClass SchoolClass @relation(fields: [classId], references: [id])
-
-  @@map("student")
+  @@unique([nome, ano])
+  @@map("turma")
 }
 
-model Grade {
-  id       String   @id @default(cuid())
+model Aula {
+  id String @id @default(cuid())
 
-  value    Float
-  date     DateTime
+  data        DateTime @unique
+  descricao   String   @db.VarChar(2048)
+  turmaId     String
+  professorId String
 
-  studentId String
-  classId String
+  turma       Turma        @relation(fields: [turmaId], references: [id])
+  professor   Professor    @relation(fields: [professorId], references: [id])
+  frequencias Frequencia[]
 
-  student Student @relation(fields: [studentId], references: [id])
-  subject SchoolClass @relation(fields: [classId], references: [id])
-
-  @@map("grade")
+  @@unique([data, turmaId, professorId])
+  @@map("aula")
 }
 
-model SchoolDay {
-  id       String   @id @default(cuid())
+model Nota {
+  id String @id @default(cuid())
 
-  date     DateTime
-  classId String
+  valor Float
 
-  schoolClass SchoolClass @relation(fields: [classId], references: [id])
+  alunoTurmaId String
 
-  frequency StudentFrequency[]
+  AlunoTurma   AlunoTurma @relation(fields: [alunoTurmaId], references: [id])
 
-  @@map("school_day")
+  @@map("nota")
 }
 
-model StudentFrequency {
-  id       String   @id @default(cuid())
+model Frequencia {
+  id String @id @default(cuid())
 
-  schoolDayId String
-  classId String
-  studentId String
+  presente Boolean
 
-  schoolDay SchoolDay @relation(fields: [schoolDayId], references: [id])
-  schoolClass SchoolClass @relation(fields: [classId], references: [id])
-  student Student @relation(fields: [studentId], references: [id])
+  aulaId  String
+  alunoTurmaId String
 
-  @@map("student_frequency")
+  AlunoTurma   AlunoTurma @relation(fields: [alunoTurmaId], references: [id])
+  Aula         Aula        @relation(fields: [aulaId], references: [id])
+
+  @@map("frequencia")
 }
