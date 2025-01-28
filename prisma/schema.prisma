@@ -85,12 +85,14 @@ model Nota {
   id String @id @default(cuid())
 
   valor Float
+  index Int
 
   alunoTurmaId String
 
   AlunoTurma   AlunoTurma @relation(fields: [alunoTurmaId], references: [id])
 
   @@map("nota")
+  @@unique([index, alunoTurmaId])
 }
 
 model Frequencia {
