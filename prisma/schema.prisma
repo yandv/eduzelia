@@ -16,7 +16,9 @@ datasource db {
 model Professor {
   id String @id @default(cuid())
 
-  nome String
+  email String @unique @default("default@email.com")
+  senha String @default("123456")
+  nome  String
 
   turmas Turma[]
   aulas  Aula[]
@@ -89,10 +91,10 @@ model Nota {
 
   alunoTurmaId String
 
-  AlunoTurma   AlunoTurma @relation(fields: [alunoTurmaId], references: [id])
+  AlunoTurma AlunoTurma @relation(fields: [alunoTurmaId], references: [id])
 
-  @@map("nota")
   @@unique([index, alunoTurmaId])
+  @@map("nota")
 }
 
 model Frequencia {
@@ -100,11 +102,11 @@ model Frequencia {
 
   presente Boolean
 
-  aulaId  String
+  aulaId       String
   alunoTurmaId String
 
-  AlunoTurma   AlunoTurma @relation(fields: [alunoTurmaId], references: [id])
-  Aula         Aula        @relation(fields: [aulaId], references: [id])
+  AlunoTurma AlunoTurma @relation(fields: [alunoTurmaId], references: [id])
+  Aula       Aula       @relation(fields: [aulaId], references: [id])
 
   @@map("frequencia")
 }

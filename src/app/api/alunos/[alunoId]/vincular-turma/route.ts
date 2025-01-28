@@ -1,5 +1,5 @@
-import { prisma } from "@/database/prisma";
-import { BaseQueryParams } from "@/utils/base-query-params";
+import { prisma } from "@/lib/database/prisma";
+import { BaseQueryParams } from "@/lib/utils/base-query-params";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 

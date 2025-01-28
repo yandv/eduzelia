@@ -1,6 +1,6 @@
-import { toCursorResponse } from "@/database/dto/pagination-cursor.dto";
-import { prisma } from "@/database/prisma";
-import { BaseQueryParams } from "@/utils/base-query-params";
+import { toCursorResponse } from "@/lib/database/dto/pagination-cursor.dto";
+import { prisma } from "@/lib/database/prisma";
+import { BaseQueryParams } from "@/lib/utils/base-query-params";
 import { NextResponse } from "next/server";
 
 export async function GET(

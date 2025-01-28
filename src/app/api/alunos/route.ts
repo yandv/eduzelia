@@ -1,5 +1,5 @@
-import { toCursorResponse } from "@/database/dto/pagination-cursor.dto";
-import { prisma } from "@/database/prisma";
+import { toCursorResponse } from "@/lib/database/dto/pagination-cursor.dto";
+import { prisma } from "@/lib/database/prisma";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
