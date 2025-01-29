@@ -3,6 +3,7 @@
 import { createContext, PropsWithChildren, useContext } from "react";
 
 export interface User {
+  email: string;
   name: string;
 }
 
@@ -16,14 +17,28 @@ interface UserContextLoggedInProps {
   isLoggedIn: true;
 }
 
-export const UserContext = createContext<
-  UserContextProps | UserContextLoggedInProps
->({ user: undefined, isLoggedIn: false });
+interface UserProviderProps {
+  session?: User;
+}
 
-export function UserProvider({ children }: PropsWithChildren) {
+const UserContext = createContext<UserContextProps | UserContextLoggedInProps>({
+  user: undefined,
+  isLoggedIn: false,
+});
+
+export function UserProvider({
+  children,
+  session,
+}: PropsWithChildren<UserProviderProps>) {
+  console.log(session);
+
   return (
     <UserContext.Provider
-      value={{ isLoggedIn: true, user: { name: "Andréia Paula" } }}
+      value={
+        session
+          ? { user: session, isLoggedIn: true }
+          : { user: undefined, isLoggedIn: false }
+      }
     >
       {children}
     </UserContext.Provider>

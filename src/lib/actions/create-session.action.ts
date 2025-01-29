@@ -2,6 +2,8 @@
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { prisma } from "../database/prisma";
+import { cookies } from "next/headers";
 
 const LoginFormSchema = z.object({
   email: z.string().email({ message: "O email precisa ser válido." }).trim(),
@@ -34,26 +36,42 @@ export async function createSession(
     };
   }
 
-  // Simular chamada à API
   const { email, password } = validatedFields.data;
-  // fetch /api/auth/login
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/login`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    }
-  );
+  const user = await prisma.professor.findFirst({
+    where: {
+      email,
+    },
+  });
 
-  if (!response.ok) {
+  if (!user) {
     return {
-      message: "Credenciais inválidas",
+      message: "Senha ou usuário inválido.",
     };
   }
+
+  if (user.senha !== password) {
+    return {
+      message: "Senha ou usuário inválido.",
+    };
+  }
+
+  const userData = {
+    id: user.id,
+    email: user.email,
+    name: user.nome,
+  };
+
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const cookieStore = await cookies();
+
+  cookieStore.set("session", JSON.stringify(userData), {
+    httpOnly: true,
+    secure: true,
+    expires: expiresAt,
+    sameSite: "lax",
+    path: "/",
+  });
 
   redirect("/dashboard");
 }
