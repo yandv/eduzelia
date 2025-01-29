@@ -1,5 +1,7 @@
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+type InputProps = React.InputHTMLAttributes<HTMLInputElement>;// todos os parametros que vc pode passar para uma função input
+//componente react só aceita um parametro que tem que ser um objeto
+
 
 export default function Input(props: InputProps) {
     return (
@@ -8,3 +10,5 @@ export default function Input(props: InputProps) {
         </>
     )
 }
+
+//desestruturação de objeto

@@ -45,7 +45,6 @@ export default function Login() {
                   {state.errors.password[0]}
                 </p>
               )}
-
               {state?.message && <p className="error">{state.message}</p>}
               <button id="buttonLogin" className="btn w-80 bg-sky-950 hover:bg-sky-900 mt-6" disabled={isPending} type="submit">
                 {isPending ? "Carregando..." : "Login"}
