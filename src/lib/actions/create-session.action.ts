@@ -73,5 +73,5 @@ export async function createSession(
     path: "/",
   });
 
-  redirect("/dashboard");
+  redirect("/");
 }
