@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const PUBLIC_ROUTES = ["/login"];
 
 export default async function middleware(req: NextRequest) {
+  return NextResponse.next();
   // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname;
   const isPublic = PUBLIC_ROUTES.includes(path);
