@@ -8,3 +8,14 @@ body {
   min-height: 100vh;
   
 }
+
+
+@media (width <= 400px) {
+  #card, #cardBody{
+  width: 20rem;
+  }
+
+  #formLogin, #buttonLogin{
+    width: 18rem;
+  }
+}

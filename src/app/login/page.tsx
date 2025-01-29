@@ -12,9 +12,9 @@ export default function Login() {
     <>
       <div className="flex flex-col justify-center items-center h-screen">
       <div className="text-sky-950 m-8 text-4xl font-semibold ">Faça o seu Login</div>
-        <div className="card border-2 bg-white border-sky-950 rounded text-neutral-content w-96 drop-shadow-lg">
-          <div className="card-body  items-center text-center">
-            <form action={action}>
+        <div id="card" className="card border-2 bg-white border-sky-950 rounded text-neutral-content w-96 drop-shadow-lg">
+          <div id="cardBody" className="card-body  items-center text-center">
+            <form id="formLogin" action={action}>
               <div className="flex flex-col text-left">
                 <label className="text-sky-950 font-semibold" htmlFor="email">Email</label>
                 <Input 
@@ -25,13 +25,13 @@ export default function Login() {
                 ></Input>
               </div>
               {state?.errors?.email && (
-                <p id="email-error" className="error">
+                <p id="email-error" className="error text-red-900 mt-2 ">
                   {state.errors.email[0]}
                 </p>
               )}
 
               <div className="flex flex-col text-left mt-6">
-                <label className="text-sky-950 font-semibold" htmlFor="password">Senha</label>
+                <label className="text-sky-950  font-semibold" htmlFor="password">Senha</label>
                 <Input
                   id="password"
                   name="password"
@@ -41,13 +41,13 @@ export default function Login() {
                 ></Input>
               </div>
               {state?.errors?.password && (
-                <p id="password-error" className="error">
+                <p id="password-error" className="error text-red-900 mt-2">
                   {state.errors.password[0]}
                 </p>
               )}
 
               {state?.message && <p className="error">{state.message}</p>}
-              <button className="btn w-80 bg-sky-950 mt-6" disabled={isPending} type="submit">
+              <button id="buttonLogin" className="btn w-80 bg-sky-950 hover:bg-sky-900 mt-6" disabled={isPending} type="submit">
                 {isPending ? "Carregando..." : "Login"}
               </button>
             </form>
