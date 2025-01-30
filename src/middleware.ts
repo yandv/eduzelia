@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserSession } from "./lib/actions/user-session.action";
 
 const PUBLIC_ROUTES = ["/login"];
 
@@ -13,12 +14,9 @@ export default async function middleware(req: NextRequest) {
   }
 
   // 3. Check if the user is authenticated using cookies
-  const cook = await cookies();
-  const session = cook.get("session")?.value;
+  const { isLoggedIn } = await getUserSession();
 
-  console.log(session);
-
-  if (session) {
+  if (isLoggedIn) {
     return NextResponse.next();
   }
 

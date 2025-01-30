@@ -13,100 +13,120 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Professor {
+model Teacher {
   id String @id @default(cuid())
 
-  email String @unique @default("default@email.com")
-  senha String @default("123456")
-  nome  String
+  email String @unique
 
-  turmas Turma[]
-  aulas  Aula[]
+  firstName String
+  lastName  String
 
-  @@map("professor")
+  password String
+
+  subjects Subject[]
+  sessions Session[]
+
+  @@map("teachers")
 }
 
-model Aluno {
+model Student {
   id String @id @default(cuid())
 
-  nome String
+  firstName String
+  lastName  String
+  birthDate DateTime
 
-  AlunoTurma AlunoTurma[]
+  studentSchoolClass StudentSchoolClass[]
+  Grade              Grade[]
 
-  @@map("aluno")
+  @@map("students")
 }
 
-model AlunoTurma {
+model StudentSchoolClass {
   id String @id @default(cuid())
 
-  alunoId String
-  turmaId String
+  studentId     String
+  schoolClassId String
 
-  notas       Nota[]
-  frequencias Frequencia[]
+  grades      Grade[]
+  frequencies Frequency[]
 
-  aluno Aluno @relation(fields: [alunoId], references: [id])
-  turma Turma @relation(fields: [turmaId], references: [id])
+  student     Student     @relation(fields: [studentId], references: [id])
+  schoolClass SchoolClass @relation(fields: [schoolClassId], references: [id])
 
-  @@unique([alunoId, turmaId])
-  @@map("aluno_turma")
+  @@unique([studentId, schoolClassId])
+  @@map("student_classes")
 }
 
-model Turma {
+model Subject {
   id String @id @default(cuid())
 
-  nome        String
-  ano         Int
-  professorId String
-  professor   Professor @relation(fields: [professorId], references: [id])
+  name String
 
-  aulas      Aula[]
-  AlunoTurma AlunoTurma[]
+  schoolClasses SchoolClass[]
+  teachers      Teacher[]
 
-  @@unique([nome, ano])
-  @@map("turma")
+  @@map("subjects")
 }
 
-model Aula {
+model SchoolClass {
   id String @id @default(cuid())
 
-  data        DateTime @unique
-  descricao   String   @db.VarChar(2048)
-  turmaId     String
-  professorId String
+  name      String
+  year      Int
+  subjectId String
 
-  turma       Turma        @relation(fields: [turmaId], references: [id])
-  professor   Professor    @relation(fields: [professorId], references: [id])
-  frequencias Frequencia[]
+  sessions             Session[]
+  studentSchoolClasses StudentSchoolClass[]
+  subject              Subject              @relation(fields: [subjectId], references: [id])
 
-  @@unique([data, turmaId, professorId])
+  @@unique([name, year])
+  @@map("school_classes")
+}
+
+model Session {
+  id String @id @default(cuid())
+
+  date          DateTime @unique
+  description   String   @db.VarChar(2048)
+  schoolClassId String
+  teacherId     String
+
+  schoolClass SchoolClass @relation(fields: [schoolClassId], references: [id])
+  teacher     Teacher     @relation(fields: [teacherId], references: [id])
+  frequencies Frequency[]
+
+  @@unique([date, schoolClassId, teacherId])
   @@map("aula")
 }
 
-model Nota {
+model Grade {
   id String @id @default(cuid())
 
-  valor Float
+  value Float
   index Int
 
-  alunoTurmaId String
+  studentId     String
+  schoolClassId String
 
-  AlunoTurma AlunoTurma @relation(fields: [alunoTurmaId], references: [id])
+  student            Student            @relation(fields: [studentId], references: [id])
+  studentSchoolClass StudentSchoolClass @relation(fields: [schoolClassId], references: [id])
 
-  @@unique([index, alunoTurmaId])
-  @@map("nota")
+  @@unique([index, studentId, schoolClassId])
+  @@map("grades")
 }
 
-model Frequencia {
+model Frequency {
   id String @id @default(cuid())
 
   presente Boolean
 
-  aulaId       String
-  alunoTurmaId String
+  sessionId            String
+  studentSchoolClassId String
 
-  AlunoTurma AlunoTurma @relation(fields: [alunoTurmaId], references: [id])
-  Aula       Aula       @relation(fields: [aulaId], references: [id])
+  session            Session            @relation(fields: [sessionId], references: [id])
+  studentSchoolClass StudentSchoolClass @relation(fields: [studentSchoolClassId], references: [id])
 
+  @@unique([sessionId, studentSchoolClassId])
   @@map("frequencia")
 }

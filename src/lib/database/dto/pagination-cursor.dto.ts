@@ -1,11 +1,3 @@
-import { z } from "zod";
-
-const paginationCursorRequestSchema = z.object({
-  page: z.number().int().positive().optional(),
-  limit: z.number().int().positive().optional(),
-  orderBy: z.string().optional(),
-});
-
 export function toCursorResponse<T>(data: T[]) {
   return {
     data,
@@ -13,6 +5,7 @@ export function toCursorResponse<T>(data: T[]) {
   };
 }
 
-export type PaginationCursorRequestDto = z.infer<
-  typeof paginationCursorRequestSchema
->;
+export interface PageCursorResponseDto<T> {
+  data: T[];
+  cursor: string;
+}

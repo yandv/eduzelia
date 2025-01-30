@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { UserProvider } from "@/lib/contexts/user.context";
-
-import { cookies } from "next/headers";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, Suspense } from "react";
 
 import "./globals.css";
 
@@ -14,17 +11,9 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<PropsWithChildren>) {
-  const cookie = await cookies();
-
-  const session = cookie.get("session");
-
   return (
     <html lang="pt-BR">
-      <body>
-        <UserProvider session={session ? JSON.parse(session.value) : undefined}>
-          {children}
-        </UserProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

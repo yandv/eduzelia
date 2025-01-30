@@ -38,34 +38,30 @@ export async function createSession(
 
   const { email, password } = validatedFields.data;
 
-  const user = await prisma.professor.findFirst({
+  const teacher = await prisma.teacher.findFirst({
     where: {
       email,
     },
   });
 
-  if (!user) {
+  if (!teacher) {
     return {
       message: "Senha ou usuário inválido.",
     };
   }
 
-  if (user.senha !== password) {
+  const { password: teacherPassword, ...rest } = teacher;
+
+  if (teacherPassword !== password) {
     return {
       message: "Senha ou usuário inválido.",
     };
   }
-
-  const userData = {
-    id: user.id,
-    email: user.email,
-    name: user.nome,
-  };
 
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const cookieStore = await cookies();
 
-  cookieStore.set("session", JSON.stringify(userData), {
+  cookieStore.set("session", JSON.stringify(rest), {
     httpOnly: true,
     secure: true,
     expires: expiresAt,
