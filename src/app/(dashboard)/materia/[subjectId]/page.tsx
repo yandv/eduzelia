@@ -1,4 +1,5 @@
 import { getUserSession } from "@/lib/actions/user-session.action";
+import Card from "@/lib/components/Card";
 import { PageCursorResponseDto } from "@/lib/database/dto/pagination-cursor.dto";
 import { SchoolClassDto } from "@/lib/database/dto/school-class.dto";
 import { SubjectDto } from "@/lib/database/dto/subject.dto";
@@ -19,6 +20,7 @@ export default async function SubjectPage({
           revalidate: 300,
           tags: [`teacher-${user?.id}-subject-${subjectId}`],
         },
+        cache: 'no-cache'
       }
     ),
     request<PageCursorResponseDto<SchoolClassDto>>(
@@ -28,10 +30,24 @@ export default async function SubjectPage({
           revalidate: 300,
           tags: [`teacher-${user?.id}-subject-${subjectId}-school-classes`],
         },
+        cache: 'no-cache'
       }
     ),
   ]);
+  const dadosDaTurmaPorAno = {
+    2025: [{
+      ID: 'a',
+      ano: '2025',
 
+    }],
+    2024: [],
+  }
+  // 701 2025 , 702 2024, 703 2024
+  // acc = {};
+  // acc = {'2025': []} -> {'2025': ['turma 701']}
+  // acc = {'2024': [], '2025':['turma 701']} -> {'2024':[turma 702],'2025': ['turma 701']}
+  // acc = {'2024': ['turma 702', 'turma 703'], '2025':['turma 701']}
+  //   
   const schoolClassesAgroupedByYear = (schoolClasses ?? [])?.reduce(
     (acc, schoolClass) => {
       if (!acc[schoolClass.year]) {
@@ -40,24 +56,34 @@ export default async function SubjectPage({
 
       acc[schoolClass.year].push(schoolClass);
 
+
       return acc;
     },
-    {} as Record<string, SchoolClassDto[]>
+    {} as Record<number, SchoolClassDto[]>
   );
 
   return (
-    <div>
-      <h1>Matéria: {subject.name}</h1>
-      <ul>
-        {Object.entries(schoolClassesAgroupedByYear).map(
+    <div className="text-sky-950 font-semibold">
+      <h1 className="text-5xl m-8">Matéria: {subject.name}</h1>
+      <ul className="m-8">
+        {Object.entries(schoolClassesAgroupedByYear).sort(([firstYear], [secondYear]) => +secondYear - +firstYear).map(
           ([year, schoolClasses]) => (
             <li key={year}>
-              <h2>{year}</h2>
-              <ul>
+              <h2 className="text-4xl">{year}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-0 ">
                 {schoolClasses.map((schoolClass) => (
-                  <li key={schoolClass.id}>{schoolClass.name}</li>
+                  <div key={schoolClass.id} className="card bg-white mt-6 text-sky-950 w-96 h-40 shadow-xl scale-100 transform transition duration-500 hover:scale-[1.1] border rounded px-0">
+                    <div className="card-body flex flex-row justify-center place-content-center border rounded">
+                      <h2 className="card-title">
+                        <ul className="flex flex-row text-2xl">Turma &nbsp;
+                          <li >{schoolClass.name}</li>
+                        </ul>
+                      </h2>
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
+              <div className="divider mt-6"></div>
             </li>
           )
         )}

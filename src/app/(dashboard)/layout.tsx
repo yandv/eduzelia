@@ -7,9 +7,9 @@ export default function DashboardLayout({
   return (
     <>
       <Navbar />
-      <div className="max-w-7xl mx-auto">
-        <Suspense fallback={<div>Carregando...</div>}>{children}</Suspense>
-      </div>
+       <div className="max-w-7xl mx-auto"> 
+      <Suspense fallback={<div>Carregando...</div>}>{children}</Suspense>
+       </div> 
     </>
   );
 }
