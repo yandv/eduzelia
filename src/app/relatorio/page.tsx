@@ -4,7 +4,7 @@ import Navbar from "@/lib/components/Navbar";
 export default function Relatorio() {
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar/>
       <div className="max-w-7xl mx-auto mt-5">
         <div className="overflow-x-auto">
           <table className="table text-black">
@@ -36,8 +36,8 @@ export default function Relatorio() {
                 <td>9</td>
                 <td>aprovado</td>
                 <td>
-                  <div className="tooltip" data-tip="hello">
-                    <button className="btn">Hover me</button>
+                  <div className="tooltip tooltip-right" data-tip="hello">
+                    <p>Hover me</p>
                   </div>
                 </td>
               </tr>
@@ -57,8 +57,8 @@ export default function Relatorio() {
               </tr>
             </tbody>
           </table>
-          <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6">Exportar</button>
         </div>
+          <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6">Exportar</button>
       </div>
     </>
   )

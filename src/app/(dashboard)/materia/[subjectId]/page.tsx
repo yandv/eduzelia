@@ -7,11 +7,13 @@ import { SubjectDto } from "@/lib/database/dto/subject.dto";
 import { request } from "@/lib/utils/system";
 
 export default async function SubjectPage({
-  params: { subjectId },
+  params,
 }: {
-  params: { subjectId: string };
+  params: Promise<{ subjectId: string }>;
 }) {
   const { user } = await getUserSession();
+
+  const { subjectId } = await params;
 
   const [subject, { data: schoolClasses }] = await Promise.all([
     request<SubjectDto>(
@@ -35,20 +37,7 @@ export default async function SubjectPage({
       }
     ),
   ]);
-  const dadosDaTurmaPorAno = {
-    2025: [{
-      ID: 'a',
-      ano: '2025',
-
-    }],
-    2024: [],
-  }
-  // 701 2025 , 702 2024, 703 2024
-  // acc = {};
-  // acc = {'2025': []} -> {'2025': ['turma 701']}
-  // acc = {'2024': [], '2025':['turma 701']} -> {'2024':[turma 702],'2025': ['turma 701']}
-  // acc = {'2024': ['turma 702', 'turma 703'], '2025':['turma 701']}
-  //   
+  
   const schoolClassesAgroupedByYear = (schoolClasses ?? [])?.reduce(
     (acc, schoolClass) => {
       if (!acc[schoolClass.year]) {
@@ -73,7 +62,7 @@ export default async function SubjectPage({
               <h2 className="text-4xl">{year}</h2>
               <div id="turmas" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {schoolClasses.map((schoolClass) => (
-                  <TurmaCard key={schoolClass.id} name={schoolClass.name} id={schoolClass.id}/>
+                  <TurmaCard key={schoolClass.id} name={schoolClass.name} id={schoolClass.id} />
                 ))}
               </div>
               <div className="divider mt-6"></div>
