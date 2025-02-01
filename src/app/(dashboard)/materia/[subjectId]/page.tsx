@@ -1,5 +1,6 @@
 import { getUserSession } from "@/lib/actions/user-session.action";
 import Card from "@/lib/components/Card";
+import TurmaCard from "@/lib/components/TurmaCard";
 import { PageCursorResponseDto } from "@/lib/database/dto/pagination-cursor.dto";
 import { SchoolClassDto } from "@/lib/database/dto/school-class.dto";
 import { SubjectDto } from "@/lib/database/dto/subject.dto";
@@ -70,17 +71,9 @@ export default async function SubjectPage({
           ([year, schoolClasses]) => (
             <li key={year}>
               <h2 className="text-4xl">{year}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-0 ">
+              <div id="turmas" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {schoolClasses.map((schoolClass) => (
-                  <div key={schoolClass.id} className="card bg-white mt-6 text-sky-950 w-96 h-40 shadow-xl scale-100 transform transition duration-500 hover:scale-[1.1] border rounded px-0">
-                    <div className="card-body flex flex-row justify-center place-content-center border rounded">
-                      <h2 className="card-title">
-                        <ul className="flex flex-row text-2xl">Turma &nbsp;
-                          <li >{schoolClass.name}</li>
-                        </ul>
-                      </h2>
-                    </div>
-                  </div>
+                  <TurmaCard key={schoolClass.id} name={schoolClass.name} id={schoolClass.id}/>
                 ))}
               </div>
               <div className="divider mt-6"></div>

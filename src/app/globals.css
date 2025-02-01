@@ -7,6 +7,11 @@ body {
   background-color: aliceblue;
   min-height: 100vh;
   
+  
+}
+
+:root{
+  background-color: aliceblue;
 }
 
 
@@ -18,4 +23,5 @@ body {
   #formLogin, #buttonLogin{
     width: 18rem;
   }
+
 }

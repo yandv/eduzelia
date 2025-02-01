@@ -58,7 +58,7 @@ export default function Login() {
                 disabled={isPending}
                 type="submit"
               >
-                {isPending ? "Carregando..." : "Login"}
+                {isPending ? <span className="loading loading-spinner bg-sky-950 loading-xs"></span>: "Login"}
               </button>
             </form>
           </div>
