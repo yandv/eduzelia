@@ -16,7 +16,7 @@ export default function Card({ subject }: CardProps) {
 
   return (
     <div
-      className="card bg-white m-8 text-sky-950 w-96 h-40 shadow-xl scale-100 transform transition duration-500 hover:scale-[1.1] border rounded"
+      className="card bg-white m-8 text-sky-950 max-w-sm h-40 shadow-xl scale-100 transform transition duration-500 hover:scale-[1.1] border rounded px-0"
       onClick={handleClick}
     >
       <div className="card-body flex justify-center place-content-center border rounded">

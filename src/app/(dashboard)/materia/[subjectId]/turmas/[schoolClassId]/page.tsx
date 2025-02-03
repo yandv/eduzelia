@@ -91,23 +91,23 @@ export default async function SchoolClassPage({
 
   return (
     <div>
-      <h2 className="text-4xl text-sky-950 font-semibold mt-6">
+      <h2 className="text-2xl md:text-4xl lg:text-5xl text-sky-950 font-semibold mt-6">
         Turma {schoolClass?.name} - Língua Portuguesa
       </h2>
-      <div>
-        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-32">
+      <div className="grid grid-cols-1 lg:grid-cols-4 place-items-center gap-4">
+        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-64 ">
           Lançar nota
         </button>
 
-        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-48">
+        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-64 ">
           Lançar frequência
         </button>
 
-        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-48">
+        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-64 ">
           Gerenciar alunos
         </button>
 
-        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-48">
+        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-64">
           Exportar planilha
         </button>
       </div>

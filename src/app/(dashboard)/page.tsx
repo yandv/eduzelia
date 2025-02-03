@@ -18,7 +18,8 @@ export default async function Home() {
 
   return (
     <>
-      <h1 className="text-6xl text-sky-950 m-8 font-semibold">
+      <h1 className="lg:text-6xl md:text-5xl text-4xl
+  text-sky-950 m-8 font-semibold">
         Olá, {user?.firstName}
       </h1>
       {subjects.map((subject) => (
