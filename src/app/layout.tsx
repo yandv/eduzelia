@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PropsWithChildren, Suspense } from "react";
+import { PropsWithChildren } from "react";
 
 import "./globals.css";
 
