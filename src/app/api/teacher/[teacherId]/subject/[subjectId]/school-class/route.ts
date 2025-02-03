@@ -3,7 +3,6 @@ import { createSchoolClassSchema } from "@/lib/database/dto/school-class.dto";
 import { prisma } from "@/lib/database/prisma";
 import { BaseQueryParams } from "@/lib/utils/base-query-params";
 import { NextResponse } from "next/server";
-import { z } from "zod";
 
 export async function POST(
   req: Request,

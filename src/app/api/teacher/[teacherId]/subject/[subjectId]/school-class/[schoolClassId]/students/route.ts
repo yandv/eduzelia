@@ -39,7 +39,7 @@ export async function GET(
   const students = await prisma.student.findMany({
     where: {
       studentSchoolClass: {
-        every: {
+        some: {
           schoolClassId,
         },
       },
@@ -47,7 +47,7 @@ export async function GET(
     include: {
       studentSchoolClass: {
         where: {
-          schoolClassId: schoolClassId,
+          schoolClassId,
         },
         include: {
           frequencies: true,
@@ -56,6 +56,8 @@ export async function GET(
       },
     },
   });
+
+  console.log(students)
 
   const response = students.map(
     ({ id, firstName, lastName, birthDate, studentSchoolClass: [turma] }) => {
@@ -68,7 +70,7 @@ export async function GET(
         firstName,
         lastName,
         birthDate,
-        frequencia: Math.round((presencas / turma.frequencies.length) * 100),
+        frequency: Math.round((presencas / Math.max(turma.frequencies?.length, 1)) * 100),
         grades: turma.grades.map(({ value }) => value),
       };
     }
