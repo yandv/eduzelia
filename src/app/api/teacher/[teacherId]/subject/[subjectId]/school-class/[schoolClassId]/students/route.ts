@@ -27,6 +27,9 @@ export async function GET(
         },
       },
     },
+    include: {
+      subject: true,
+    },
   });
 
   if (!schoolClass) {
@@ -57,24 +60,33 @@ export async function GET(
     },
   });
 
-  console.log(students)
+  return NextResponse.json({
+    ...schoolClass,
+    students: toCursorResponse(
+      students.map(
+        ({
+          id,
+          firstName,
+          lastName,
+          birthDate,
+          studentSchoolClass: [turma],
+        }) => {
+          const presencas = turma.frequencies.filter(
+            ({ presente }) => presente
+          ).length;
 
-  const response = students.map(
-    ({ id, firstName, lastName, birthDate, studentSchoolClass: [turma] }) => {
-      const presencas = turma.frequencies.filter(
-        ({ presente }) => presente
-      ).length;
-
-      return {
-        id,
-        firstName,
-        lastName,
-        birthDate,
-        frequency: Math.round((presencas / Math.max(turma.frequencies?.length, 1)) * 100),
-        grades: turma.grades.map(({ value }) => value),
-      };
-    }
-  );
-
-  return NextResponse.json(toCursorResponse(response));
+          return {
+            id,
+            firstName,
+            lastName,
+            birthDate,
+            frequency: Math.round(
+              (presencas / Math.max(turma.frequencies?.length, 1)) * 100
+            ),
+            grades: turma.grades.map(({ value }) => value),
+          };
+        }
+      )
+    ),
+  });
 }

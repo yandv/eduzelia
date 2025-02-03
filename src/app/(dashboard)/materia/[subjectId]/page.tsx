@@ -5,6 +5,10 @@ import { SchoolClassDto } from "@/lib/database/dto/school-class.dto";
 import { SubjectDto } from "@/lib/database/dto/subject.dto";
 import { request } from "@/lib/utils/system";
 
+interface Subject extends SubjectDto {
+  schoolClasses: PageCursorResponseDto<SchoolClassDto>;
+}
+
 export default async function SubjectPage({
   params,
 }: {
@@ -14,28 +18,19 @@ export default async function SubjectPage({
 
   const { subjectId } = await params;
 
-  const [subject, { data: schoolClasses }] = await Promise.all([
-    request<SubjectDto>(
-      `${process.env.NEXT_PUBLIC_API_URL}/teacher/${user?.id}/subject/${subjectId}`,
-      {
-        next: {
-          revalidate: 300,
-          tags: [`teacher-${user?.id}-subject-${subjectId}`],
-        },
-        cache: "no-cache",
-      }
-    ),
-    request<PageCursorResponseDto<SchoolClassDto>>(
-      `${process.env.NEXT_PUBLIC_API_URL}/teacher/${user?.id}/subject/${subjectId}/school-class`,
-      {
-        next: {
-          revalidate: 300,
-          tags: [`teacher-${user?.id}-subject-${subjectId}-school-classes`],
-        },
-        cache: "no-cache",
-      }
-    ),
-  ]);
+  const {
+    name,
+    schoolClasses: { data: schoolClasses },
+  } = await request<Subject>(
+    `${process.env.NEXT_PUBLIC_API_URL}/teacher/${user?.id}/subject/${subjectId}/school-class`,
+    {
+      next: {
+        revalidate: 300,
+        tags: [`teacher-${user?.id}-subject-${subjectId}-school-classes`],
+      },
+      cache: "no-cache",
+    }
+  );
 
   const schoolClassesAgroupedByYear = (schoolClasses ?? [])?.reduce(
     (acc, schoolClass) => {
@@ -52,7 +47,7 @@ export default async function SubjectPage({
 
   return (
     <div className="text-sky-950 font-semibold">
-      <h1 className="text-5xl mt-6">Matéria: {subject.name}</h1>
+      <h1 className="text-5xl mt-6">Matéria: {name}</h1>
       <ul className="m-8">
         {Object.entries(schoolClassesAgroupedByYear)
           .sort(([firstYear], [secondYear]) => +secondYear - +firstYear)

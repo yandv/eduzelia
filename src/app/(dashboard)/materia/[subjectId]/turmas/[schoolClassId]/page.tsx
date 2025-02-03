@@ -11,6 +11,48 @@ interface TableRowProps {
   student: StudentDto;
 }
 
+function StudentCriteria({ student }: TableRowProps) {
+  if (student?.grades.length < 4) {
+    return (
+      <div
+        className="tooltip"
+        data-tip={`Para que o 'critério' seja calculado, é necessário que pelo menos 4 notas do aluno ${student?.firstName} ${student?.lastName} sejam lançadas`}
+      >
+        <p>Notas insuficientes</p>
+      </div>
+    );
+  }
+
+  const mean = student?.grades.slice(0, 4).reduce((a, b) => a + b, 0) / 4;
+
+  if (mean >= 7) {
+    return <p>Ótimo</p>;
+  }
+
+  if (mean >= 5) {
+    return <p>Bom</p>;
+  }
+
+  return <p>Ruim</p>;
+}
+
+function StudentSituation({ student }: TableRowProps) {
+  if (student?.grades.length < 4) {
+    return (
+      <div
+        className="tooltip"
+        data-tip={`Para que a 'situação' seja calculada, é necessário que pelo menos 4 notas do aluno ${student?.firstName} ${student?.lastName} sejam lançadas`}
+      >
+        <p>Notas insuficientes</p>
+      </div>
+    );
+  }
+
+  const mean = student?.grades.slice(0, 4).reduce((a, b) => a + b, 0) / 4;
+
+  return <td>{mean}</td>;
+}
+
 function TableRow({ student }: TableRowProps) {
   const mean = student?.grades.slice(0, 4).reduce((a, b) => a + b, 0) / 4;
 
@@ -21,19 +63,14 @@ function TableRow({ student }: TableRowProps) {
       <th>1</th>
       <td>
         <div
-          className="tooltip tooltip-right"
+          className="tooltip"
           data-tip={new Date(student?.birthDate).toLocaleDateString("pt-BR")}
         >
           {`${student?.firstName} ${student?.lastName}`}
         </div>
       </td>
       <td>
-        <div
-          className="tooltip tooltip-right"
-          data-tip="O critério é calculado com base na média das notas"
-        >
-          Muito bom
-        </div>
+        <StudentCriteria student={student} />
       </td>
       <td>{student?.grades[0] ?? 0}</td>
       <td>{student?.grades[1] ?? 0}</td>
@@ -41,19 +78,19 @@ function TableRow({ student }: TableRowProps) {
       <td>{student?.grades[3] ?? 0}</td>
       <td>{mean}</td>
       <td>
-        {mean >= 5
-          ? "Aprovado"
-          : student?.grades.length < 4
-          ? "Notas lançadas insuficientes"
-          : "Reprovado"}
+        <StudentSituation student={student} />
       </td>
       <td>
-        <div className="tooltip tooltip-right" data-tip="hello">
+        <div className="tooltip" data-tip="hello">
           <p>{student?.frequency}%</p>
         </div>
       </td>
     </tr>
   );
+}
+
+interface SchoolClass extends SchoolClassDto {
+  students: PageCursorResponseDto<StudentDto>;
 }
 
 export default async function SchoolClassPage({
@@ -62,37 +99,23 @@ export default async function SchoolClassPage({
   const { user } = await getUserSession();
   const { subjectId, schoolClassId } = await params;
 
-  const [{ data: students }, schoolClass] = await Promise.all([
-    request<PageCursorResponseDto<StudentDto>>(
-      `${process.env.NEXT_PUBLIC_API_URL}/teacher/${user?.id}/subject/${subjectId}/school-class/${schoolClassId}/students`,
-      {
-        next: {
-          revalidate: 300,
-          tags: [
-            `teacher-${user?.id}-subject-${subjectId}-school-class-${schoolClassId}-students`,
-          ],
-        },
-        cache: "no-cache",
-      }
-    ),
-    request<SchoolClassDto>(
-      `${process.env.NEXT_PUBLIC_API_URL}/teacher/${user?.id}/subject/${subjectId}/school-class/${schoolClassId}`,
-      {
-        next: {
-          revalidate: 300,
-          tags: [
-            `teacher-${user?.id}-subject-${subjectId}-school-class-${schoolClassId}`,
-          ],
-        },
-        cache: "no-cache",
-      }
-    ),
-  ]);
+  const schoolClass = await request<SchoolClass>(
+    `${process.env.NEXT_PUBLIC_API_URL}/teacher/${user?.id}/subject/${subjectId}/school-class/${schoolClassId}/students`,
+    {
+      next: {
+        revalidate: 300,
+        tags: [
+          `teacher-${user?.id}-subject-${subjectId}-school-class-${schoolClassId}-students`,
+        ],
+      },
+      cache: "no-cache",
+    }
+  );
 
   return (
     <div>
       <h2 className="text-2xl md:text-4xl lg:text-5xl text-sky-950 font-semibold mt-6">
-        Turma {schoolClass?.name} - Língua Portuguesa
+        Turma {schoolClass.name} - {schoolClass.subject?.name}
       </h2>
       <div className="grid grid-cols-1 lg:grid-cols-4 place-items-center gap-4">
         <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-64 ">
@@ -129,7 +152,7 @@ export default async function SchoolClassPage({
               </tr>
             </thead>
             <tbody>
-              {students.map((student) => (
+              {schoolClass.students.data.map((student) => (
                 <TableRow key={student.id} student={student} />
               ))}
             </tbody>

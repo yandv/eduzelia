@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SubjectDto } from "./subject.dto";
 
 export const createSchoolClassSchema = z.object({
   name: z.string().max(255),
@@ -8,4 +9,5 @@ export const createSchoolClassSchema = z.object({
 export interface SchoolClassDto
   extends z.infer<typeof createSchoolClassSchema> {
   id: string;
+  subject?: SubjectDto;
 }
