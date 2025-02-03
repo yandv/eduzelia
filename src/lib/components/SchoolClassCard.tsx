@@ -8,7 +8,7 @@ interface TurmaProps {
   subjectId: string;
 }
 
-export default function TurmaCard({ schoolClass, subjectId }: TurmaProps) {
+export default function SchoolClassCard({ schoolClass, subjectId }: TurmaProps) {
   const { push } = useRouter();
 
   const handleClick = () => {

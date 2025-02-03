@@ -1,4 +1,6 @@
 import { getUserSession } from "@/lib/actions/user-session.action";
+import { StudentsManage } from "@/lib/components/StudentsManage";
+import { Button } from "@/lib/components/ui/Button";
 import { PageCursorResponseDto } from "@/lib/database/dto/pagination-cursor.dto";
 import { SchoolClassDto } from "@/lib/database/dto/school-class.dto";
 import { StudentDto } from "@/lib/database/dto/student.dto";
@@ -115,22 +117,14 @@ export default async function SchoolClassPage({
       <h2 className="text-2xl md:text-4xl lg:text-5xl text-sky-950 font-semibold mt-6">
         Turma {schoolClass.name} - {schoolClass.subject?.name}
       </h2>
-      <div className="grid grid-cols-1 lg:grid-cols-4 place-items-center gap-4">
-        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-64 ">
-          Lançar nota
-        </button>
-
-        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-64 ">
-          Lançar frequência
-        </button>
-
-        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-64 ">
-          Gerenciar alunos
-        </button>
-
-        <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-64">
-          Exportar planilha
-        </button>
+      <div className="grid grid-cols-1 lg:grid-cols-4 place-items-center gap-4 mt-6">
+        <Button>Lançar nota</Button>
+        <Button>Lançar frequência</Button>
+        <StudentsManage
+          schoolClass={schoolClass}
+          students={schoolClass.students.data}
+        />
+        <Button>Exportar planilha</Button>
       </div>
       <div className="max-w-7xl mx-auto mt-5">
         <div className="overflow-x-scroll overflow-y-scroll">
