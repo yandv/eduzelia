@@ -1,5 +1,5 @@
 import { getUserSession } from "@/lib/actions/user-session.action";
-import TurmaCard from "@/lib/components/TurmaCard";
+import SchoolClassCard from "@/lib/components/SchoolClassCard";
 import { PageCursorResponseDto } from "@/lib/database/dto/pagination-cursor.dto";
 import { SchoolClassDto } from "@/lib/database/dto/school-class.dto";
 import { SubjectDto } from "@/lib/database/dto/subject.dto";
@@ -59,7 +59,7 @@ export default async function SubjectPage({
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
               >
                 {schoolClasses.map((schoolClass) => (
-                  <TurmaCard
+                  <SchoolClassCard
                     key={schoolClass.id}
                     schoolClass={schoolClass}
                     subjectId={subjectId}
