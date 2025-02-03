@@ -58,6 +58,17 @@ export async function GET(
         },
       },
     },
+    orderBy: [
+      {
+        firstName: "asc",
+      },
+      {
+        lastName: "asc",
+      },
+      {
+        birthDate: "asc",
+      },
+    ],
   });
 
   return NextResponse.json({

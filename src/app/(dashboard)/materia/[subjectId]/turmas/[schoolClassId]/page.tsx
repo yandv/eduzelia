@@ -56,8 +56,6 @@ function StudentSituation({ student }: TableRowProps) {
 function TableRow({ student }: TableRowProps) {
   const mean = student?.grades.slice(0, 4).reduce((a, b) => a + b, 0) / 4;
 
-  // onde está as notas colocarei um input para edição que fará uma requisição para endpoint de atualizar nota ou usará uma action do nextjs, to vendo ainda....
-
   return (
     <tr>
       <th>1</th>
