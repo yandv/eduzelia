@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { PropsWithChildren } from "react";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -6,13 +8,11 @@ export const metadata: Metadata = {
   description: "Zelia Carolina - Grade and class Management",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<PropsWithChildren>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body>{children}</body>
     </html>
   );

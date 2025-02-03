@@ -1,0 +1,24 @@
+meta {
+  name: Lançar notas
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:3000/api/professor/:professorId/turmas/:turmaId/alunos/:alunoId/lancar-nota
+  body: json
+  auth: none
+}
+
+params:path {
+  professorId: cm6frrxa6000008lbeeqh03j2
+  turmaId: cm6frrxa6000008lbeeqh03j2
+  alunoId: cm6frrxa6000008lbeeqh03j2
+}
+
+body:json {
+  {
+    "valor": 5,
+    "index": 2
+  }
+}

@@ -2,20 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  background-color: aliceblue;
+  min-height: 100vh;
+  
+  
+}
+
+:root{
+  background-color: aliceblue;
+}
+
+
+@media (width <= 400px) {
+  #card, #cardBody{
+  width: 20rem;
+  }
+
+  #formLogin, #buttonLogin{
+    width: 18rem;
+  }
+
 }

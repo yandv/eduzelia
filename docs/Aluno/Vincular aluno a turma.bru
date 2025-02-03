@@ -1,0 +1,21 @@
+meta {
+  name: Vincular aluno a turma
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/api/alunos/:id/vincular-turma
+  body: json
+  auth: none
+}
+
+params:path {
+  id: cm6frrxa6000008lbeeqh03j2
+}
+
+body:json {
+  {
+    "turmaId": "cm6frrxa6000008lbeeqh03j2"
+  }
+}
