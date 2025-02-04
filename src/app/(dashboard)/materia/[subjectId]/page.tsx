@@ -79,7 +79,7 @@ async function SchoolClassList({ userId, subjectId }: SchoolClassListProps) {
           .map(([year, schoolClasses]) => (
             <div key={year} className="w-full">
               <h2 className="text-4xl">{year}</h2>
-              <div className="flex flex-row gap-4 flex-wrap">
+              <div className="flex flex-row gap-4 flex-wrap max-sm:justify-center">
                 {schoolClasses.map((schoolClass) => (
                   <Link
                     key={schoolClass.id}
