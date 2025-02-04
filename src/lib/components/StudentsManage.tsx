@@ -23,7 +23,7 @@ export function AddStudent({ schoolClass }: StudentManageProps) {
 
   return (
     <>
-      <Button onClick={handleToggle}>Adicionar aluno</Button>
+      <Button className="w-64" onClick={handleToggle}>Adicionar aluno</Button>
       <Modal visible={visible} onClose={handleClose} closeButton>
         <Modal.Title>
           <h3 className="text-3xl mb-8 text-sky-950 font-semibold">
