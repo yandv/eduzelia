@@ -71,5 +71,8 @@ export async function GET(
     },
   });
 
-  return NextResponse.json(toCursorResponse(schoolClasses));
+  return NextResponse.json({
+    ...subject,
+    schoolClasses: toCursorResponse(schoolClasses),
+  });
 }
