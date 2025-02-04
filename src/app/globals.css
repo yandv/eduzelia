@@ -25,3 +25,7 @@ body {
   }
 
 }
+
+.btn.btn-disabled, .btn[disabled], .btn:disabled {
+  color:black;
+}

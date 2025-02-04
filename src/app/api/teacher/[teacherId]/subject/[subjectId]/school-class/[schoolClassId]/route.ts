@@ -26,6 +26,9 @@ export async function GET(
         },
       },
     },
+    include: {
+      subject: true,
+    },
   });
 
   if (!schoolClass) {
@@ -35,12 +38,5 @@ export async function GET(
     );
   }
 
-  const turma = await prisma.schoolClass.findFirst({
-    where: {
-      id: schoolClassId,
-      subjectId,
-    },
-  });
-
-  return NextResponse.json(turma);
+  return NextResponse.json(schoolClass);
 }

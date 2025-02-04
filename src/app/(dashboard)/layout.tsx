@@ -1,5 +1,5 @@
 import Navbar from "@/lib/components/Navbar";
-import { PropsWithChildren, Suspense } from "react";
+import { PropsWithChildren } from "react";
 
 function SuspenseFallback() {
   return (
@@ -16,9 +16,7 @@ export default function DashboardLayout({
   return (
     <>
       <Navbar />
-      <div className="max-w-7xl mx-auto">
-        <Suspense fallback={<SuspenseFallback />}>{children}</Suspense>
-      </div>
+      <div className="max-w-7xl mx-auto">{children}</div>
     </>
   );
 }
