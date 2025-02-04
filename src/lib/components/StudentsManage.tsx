@@ -65,8 +65,8 @@ export function StudentsManage({ schoolClass, students }: StudentManageProps) {
       setSelectedStudents((prevState) =>
         prevState.some((selectedStudent) => selectedStudent.id === student.id)
           ? prevState.filter(
-              (selectedStudent) => selectedStudent.id !== student.id
-            )
+            (selectedStudent) => selectedStudent.id !== student.id
+          )
           : [...prevState, student]
       );
     };
@@ -93,21 +93,20 @@ export function StudentsManage({ schoolClass, students }: StudentManageProps) {
       </Button>
       <Modal visible={visible} onClose={handleClose} closeButton>
         <Modal.Title>
-          <h3 className="text-sm text-sky-950 font-semibold">
+          <h3 className="text-3xl mb-8 text-sky-950 font-semibold">
             Gerenciar alunos - {schoolClass?.name}
           </h3>
-
-          <Button className="ml-3">
-            Adicionar aluno
-          </Button>
-
-          <Button
-            className="ml-3"
-            disabled={!selectedStudents.length}
-            onClick={handleRemoveStudent}
-          >
-            Remover aluno
-          </Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 place-items-center">
+            <Button className="w-48">
+              Adicionar aluno
+            </Button>
+            <Button
+              className="w-48"
+              disabled={!selectedStudents.length}
+              onClick={handleRemoveStudent}>
+              Remover aluno
+            </Button>
+          </div>
         </Modal.Title>
         <Modal.ModalBody>
           <table className="table text-black">

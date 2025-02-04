@@ -67,7 +67,7 @@ function Modal({
 
   return (
     <dialog ref={modalRef} className="modal" onCancel={handleESC}>
-      <div className="modal-box">
+      <div className="modal-box bg-white">
         <div ref={titleRef} className="font-bold text-lg mb-2" />
         <div ref={bodyRef}>
           <ModalContext.Provider value={{ bodyRef, titleRef, actionsRef }}>
@@ -75,9 +75,9 @@ function Modal({
           </ModalContext.Provider>
         </div>
         <div className="modal-action">
-          <form ref={actionsRef} method="dialog">
+          <form className="grid grid-cols-1 lg:grid-rows-2 md:grid-cols-2 place-items-center" ref={actionsRef} method="dialog">
             {closeButton && (
-              <Button className="btn" onClick={handleClose}>
+              <Button className="btn ml-2 w-48" onClick={handleClose}>
                 Fechar
               </Button>
             )}
