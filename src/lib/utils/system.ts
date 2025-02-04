@@ -3,6 +3,8 @@ export function request<T>(
   init?: RequestInit
 ) {
   return fetch(input, init).then<T>(async (response) => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     if (!response.ok) {
       console.log(input);
       throw new Error(await response.text());

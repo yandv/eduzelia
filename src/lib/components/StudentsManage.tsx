@@ -52,7 +52,7 @@ export function StudentsManage({ schoolClass, students }: StudentManageProps) {
   useEffect(() => {
     setVirtualStudents(students);
     setSelectedStudents([])
-  }, [visible]);
+  }, [visible, students]);
 
   const handleToggle = () => setVisible((prevState) => !prevState);
 
