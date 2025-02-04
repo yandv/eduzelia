@@ -21,7 +21,7 @@ interface ModalProps {
 interface ModalContextProps {
   titleRef: React.RefObject<HTMLDivElement | null>;
   bodyRef: React.RefObject<HTMLDivElement | null>;
-  actionsRef: React.RefObject<HTMLFormElement | null>;
+  actionsRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const ModalContext = createContext<ModalContextProps>({
@@ -40,7 +40,7 @@ function Modal({
 
   const titleRef = useRef<HTMLDivElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
-  const actionsRef = useRef<HTMLFormElement | null>(null);
+  const actionsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!modalRef.current) {
@@ -71,13 +71,13 @@ function Modal({
         <div ref={titleRef} className="font-bold text-lg mb-2" />
         <div ref={bodyRef} />
         <div className="modal-action">
-          <form className="grid grid-cols-1 lg:grid-rows-2 md:grid-cols-2 place-items-center" ref={actionsRef} method="dialog">
+          <div ref={actionsRef}>
             {closeButton && (
-              <Button className="btn ml-2 w-48" onClick={handleClose}>
+              <Button className="btn" onClick={handleClose}>
                 Fechar
               </Button>
             )}
-          </form>
+          </div>
         </div>
       </div>
       <ModalContext.Provider value={{ bodyRef, titleRef, actionsRef }}>
@@ -105,7 +105,7 @@ function ModalBody({ children }: { children: React.ReactNode }) {
   return createPortal(children, divRef.current);
 }
 
-Modal.ModalBody = ModalBody;
+Modal.Body = ModalBody;
 
 function ModalTitle({ children }: { children: React.ReactNode }) {
   const { titleRef } = useModal();
@@ -119,11 +119,13 @@ Modal.Title = ModalTitle;
 
 interface ModalActionsProps {
   inverse?: boolean;
+  className?: string;
 }
 
 function ModalActions({
   children,
   inverse,
+  className,
 }: PropsWithChildren<ModalActionsProps>) {
   const { actionsRef } = useModal();
 
@@ -132,7 +134,8 @@ function ModalActions({
   if (inverse) {
     actionsRef.current.className = cn(
       actionsRef.current.className,
-      "flex flex-row-reverse row-gap-2"
+      "flex flex-row-reverse row-gap-2",
+      className
     );
   }
 

@@ -10,12 +10,9 @@ export default async function SubjectListPage() {
 
   return (
     <>
-      <h1
-        className="lg:text-6xl md:text-5xl text-4xl
-  text-sky-950 m-8 font-semibold"
-      >
+      <h2 className="text-2xl md:text-3xl lg:text-5xl text-sky-950 mt-6 font-semibold">
         Olá, {user?.firstName}
-      </h1>
+      </h2>
       <Suspense>
         <SubjectList userId={user?.id} />
       </Suspense>
@@ -33,21 +30,21 @@ async function SubjectList({ userId }: SubjectListProps) {
   >(`${process.env.NEXT_PUBLIC_API_URL}/teacher/${userId}/subject`, {
     next: {
       revalidate: 300,
-      tags: [`teacher-${userId}-subjects`],
+      tags: [`subjects`],
     },
   });
 
   return (
-    <>
+    <div className="flex flex-row flex-wrap gap-4 mt-6">
       {subjects.map((subject) => (
         <Link key={subject.id} href={`/materia/${subject.id}`} prefetch>
-          <div className="card bg-white m-8 text-sky-950 max-w-sm h-40 shadow-xl scale-100 transform transition duration-500 hover:scale-[1.1] border rounded px-0">
-            <div className="card-body flex justify-center place-content-center border rounded">
+          <div className="card bg-white text-sky-950 h-40 w-64 shadow-xl scale-100 transform transition duration-500 hover:scale-[1.1] border rounded px-0">
+            <div className="card-body flex flex-col justify-center items-center border rounded">
               <h2 className="card-title">{subject.name}</h2>
             </div>
           </div>
         </Link>
       ))}
-    </>
+    </div>
   );
 }

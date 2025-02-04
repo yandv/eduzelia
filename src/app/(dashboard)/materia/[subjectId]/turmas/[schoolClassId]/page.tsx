@@ -1,11 +1,13 @@
 import { getUserSession } from "@/lib/actions/user-session.action";
-import { StudentsManage } from "@/lib/components/StudentsManage";
+import { Suspense } from "@/lib/components/Loading";
+import { AddStudent } from "@/lib/components/StudentsManage";
 import { Button } from "@/lib/components/ui/Button";
 import { PageCursorResponseDto } from "@/lib/database/dto/pagination-cursor.dto";
 import { SchoolClassDto } from "@/lib/database/dto/school-class.dto";
 import { StudentDto } from "@/lib/database/dto/student.dto";
 import { BaseQueryParams } from "@/lib/utils/base-query-params";
 import { request } from "@/lib/utils/system";
+import Link from "next/link";
 
 // dps coloca esse componente em algum outro lugar
 
@@ -99,28 +101,55 @@ export default async function SchoolClassPage({
   const { user } = await getUserSession();
   const { subjectId, schoolClassId } = await params;
 
+  return (
+    <div>
+      <Suspense>
+        <StudentList
+          userId={user?.id}
+          subjectId={subjectId}
+          schoolClassId={schoolClassId}
+        />
+      </Suspense>
+    </div>
+  );
+}
+
+interface StudentListProps {
+  userId?: string;
+  subjectId: string;
+  schoolClassId: string;
+}
+
+async function StudentList({
+  userId,
+  subjectId,
+  schoolClassId,
+}: StudentListProps) {
   const schoolClass = await request<SchoolClass>(
-    `${process.env.NEXT_PUBLIC_API_URL}/teacher/${user?.id}/subject/${subjectId}/school-class/${schoolClassId}/students`,
+    `${process.env.NEXT_PUBLIC_API_URL}/teacher/${userId}/subject/${subjectId}/school-class/${schoolClassId}/students`,
     {
       next: {
         revalidate: 300,
-        tags: [
-          `teacher-${user?.id}-subject-${subjectId}-school-class-${schoolClassId}-students`,
-        ],
+        tags: [`students`],
       },
       cache: "no-cache",
     }
   );
 
   return (
-    <div>
-      <h2 className="text-2xl md:text-4xl lg:text-5xl text-sky-950 font-semibold mt-6">
+    <>
+      <h2 className="text-2xl md:text-3xl lg:text-5xl text-sky-950 mt-6 font-semibold">
         Turma {schoolClass.name} - {schoolClass.subject?.name}
       </h2>
       <div className="grid grid-cols-1 lg:grid-cols-4 place-items-center gap-4 mt-6">
         <Button>Lançar nota</Button>
-        <Button>Lançar frequência</Button>
-        <StudentsManage
+        <Link
+          href={`/materia/${subjectId}/turmas/${schoolClass.id}/lancar-frequencia`}
+          prefetch
+        >
+          <Button>Lançar frequência</Button>
+        </Link>
+        <AddStudent
           schoolClass={schoolClass}
           students={schoolClass.students.data}
         />
@@ -151,6 +180,6 @@ export default async function SchoolClassPage({
           </table>
         </div>
       </div>
-    </div>
+    </>
   );
 }

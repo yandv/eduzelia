@@ -4,28 +4,20 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "../database/prisma";
 import { cookies } from "next/headers";
+import { FormState } from "../utils/system";
 
-const LoginFormSchema = z.object({
+const loginFormSchema = z.object({
   email: z.string().email({ message: "O email precisa ser válido." }).trim(),
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
 });
 
-type LoginForm = z.infer<typeof LoginFormSchema>;
-
-type FormState<T> =
-  | {
-      errors?: {
-        [K in keyof T]?: string[];
-      };
-      message?: string;
-    }
-  | undefined;
+type LoginForm = z.infer<typeof loginFormSchema>;
 
 export async function createSession(
-  prevState: FormState<LoginForm>,
+  _: FormState<LoginForm>,
   formData: FormData
 ) {
-  const validatedFields = LoginFormSchema.safeParse({
+  const validatedFields = loginFormSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
   });

@@ -3,7 +3,7 @@ export function request<T>(
   init?: RequestInit
 ) {
   return fetch(input, init).then<T>(async (response) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // await new Promise((resolve) => setTimeout(resolve, 500));
 
     if (!response.ok) {
       console.log(input);
@@ -15,3 +15,12 @@ export function request<T>(
 }
 
 export type CacheReturn<T> = () => Promise<T>;
+
+export type FormState<T> =
+  | {
+      errors?: {
+        [K in keyof T]?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
