@@ -28,7 +28,7 @@ export async function createSchoolClass(
   const { name, year, subjectId } = validatedFields.data;
   const { user } = await getUserSession();
 
-  const schoolClass = await prisma.schoolClass.create({
+  await prisma.schoolClass.create({
     data: {
       name,
       year,

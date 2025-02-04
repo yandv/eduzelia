@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SchoolClassDto } from "../database/dto/school-class.dto";
 import Modal from "./ui/Modal";
 import { Button } from "./ui/Button";
@@ -12,7 +12,7 @@ interface StudentManageProps {
   students: StudentDto[];
 }
 
-export function AddStudent({ schoolClass, students }: StudentManageProps) {
+export function AddStudent({ schoolClass }: StudentManageProps) {
   const [visible, setVisible] = useState(false);
 
   const handleToggle = () => setVisible((prevState) => !prevState);
