@@ -67,7 +67,7 @@ function Modal({
 
   return (
     <dialog ref={modalRef} className="modal" onCancel={handleESC}>
-      <div className="modal-box bg-white">
+      <div className="modal-box bg-white max-w-sm">
         <div ref={titleRef} className="font-bold text-lg mb-2" />
         <div ref={bodyRef} />
         <div className="modal-action">

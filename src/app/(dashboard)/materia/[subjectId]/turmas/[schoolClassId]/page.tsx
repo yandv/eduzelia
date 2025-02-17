@@ -142,18 +142,18 @@ async function StudentList({
         Turma {schoolClass.name} - {schoolClass.subject?.name}
       </h2>
       <div className="grid grid-cols-1 lg:grid-cols-4 place-items-center gap-4 mt-6">
-        <Button>Lançar nota</Button>
+        <Button className="w-64">Lançar nota</Button>
         <Link
           href={`/materia/${subjectId}/turmas/${schoolClass.id}/lancar-frequencia`}
           prefetch
         >
-          <Button>Lançar frequência</Button>
+          <Button className="w-64">Lançar frequência</Button>
         </Link>
         <AddStudent
           schoolClass={schoolClass}
           students={schoolClass.students.data}
         />
-        <Button>Exportar planilha</Button>
+        <Button className="w-64">Exportar planilha</Button>
       </div>
       <div className="max-w-7xl mx-auto mt-5">
         <div className="overflow-x-scroll overflow-y-scroll">

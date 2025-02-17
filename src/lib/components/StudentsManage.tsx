@@ -23,8 +23,8 @@ export function AddStudent({ schoolClass }: StudentManageProps) {
 
   return (
     <>
-      <Button onClick={handleToggle}>Adicionar aluno</Button>
-      <Modal visible={visible} onClose={handleClose} closeButton>
+      <Button className="w-64" onClick={handleToggle}>Adicionar aluno</Button>
+      <Modal  visible={visible} onClose={handleClose} closeButton>
         <Modal.Title>
           <h3 className="text-3xl mb-8 text-sky-950 font-semibold">
             Adicionar aluno - {schoolClass?.name}
@@ -34,7 +34,7 @@ export function AddStudent({ schoolClass }: StudentManageProps) {
           <FormTextInput label="Nome do aluno" />
         </Modal.Body>
         <Modal.Actions className="grid grid-cols-1 lg:grid-rows-2 md:grid-cols-2 place-items-center">
-          <Button disabled>Adicionar aluno</Button>
+          <Button className="ml-2" disabled>Adicionar aluno</Button>
         </Modal.Actions>
       </Modal>
     </>

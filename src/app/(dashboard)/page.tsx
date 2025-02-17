@@ -35,7 +35,7 @@ async function SubjectList({ userId }: SubjectListProps) {
   });
 
   return (
-    <div className="flex flex-row flex-wrap gap-4 mt-6">
+    <div className="flex flex-row flex-wrap gap-4 mt-6 max-sm:justify-center">
       {subjects.map((subject) => (
         <Link key={subject.id} href={`/materia/${subject.id}`} prefetch>
           <div className="card bg-white text-sky-950 h-40 w-64 shadow-xl scale-100 transform transition duration-500 hover:scale-[1.1] border rounded px-0">
