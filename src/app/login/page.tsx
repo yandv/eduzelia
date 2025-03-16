@@ -2,10 +2,10 @@
 
 import { useActionState } from "react";
 import { createSession } from "../../lib/actions/create-session.action";
-import FormTextInput from "@/lib/components/form/FormTextInput";
+import FormTextInput from "@/lib/components/ui/form/FormTextInput";
 import { Button } from "@/lib/components/ui/Button";
-import FormFieldErrorMessage from "@/lib/components/form/FormFieldErrorMessage";
-import FormErrorMessage from "@/lib/components/form/FormErrorMessage";
+import FormFieldErrorMessage from "@/lib/components/ui/form/FormFieldErrorMessage";
+import FormErrorMessage from "@/lib/components/ui/form/FormErrorMessage";
 
 export default function Login() {
   const [formState, action, isPending] = useActionState(

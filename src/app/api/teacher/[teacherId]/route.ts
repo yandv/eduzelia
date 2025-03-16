@@ -12,6 +12,9 @@ export async function GET(
     where: {
       id: teacherId,
     },
+    omit: {
+      password: true,
+    },
   });
 
   if (!teacher) {

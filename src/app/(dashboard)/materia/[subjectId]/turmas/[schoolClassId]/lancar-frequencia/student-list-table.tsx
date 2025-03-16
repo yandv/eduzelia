@@ -1,36 +1,32 @@
-import Table from "@/lib/components/Table";
-import { PageCursorResponseDto } from "@/lib/database/dto/pagination-cursor.dto";
-import { SchoolClassDto } from "@/lib/database/dto/school-class.dto";
+"use client";
+
+import { frequency } from "@/lib/actions/students/frequency.action";
+import { Button } from "@/lib/components/ui/Button";
+import FormTextarea from "@/lib/components/ui/form/FormTextarea";
+import FormTextInput from "@/lib/components/ui/form/FormTextInput";
+import { ConfirmationModal } from "@/lib/components/ui/modal/ConfirmationModal";
+import { useDialog } from "@/lib/components/ui/modal/Modal";
+import Table from "@/lib/components/ui/table/Table";
+import { SchoolClass } from "@/lib/database/dto/school-class.dto";
 import { StudentDto } from "@/lib/database/dto/student.dto";
-import { request } from "@/lib/utils/system";
+import { useState, useTransition } from "react";
 
 interface StudentListProps {
-  userId?: string;
-  subjectId: string;
-  schoolClassId: string;
+  schoolClass: SchoolClass;
+  teacherId: string;
 }
 
-interface SchoolClass extends SchoolClassDto {
-  students: PageCursorResponseDto<StudentDto>;
-}
-
-export async function StudentListTable({
-  userId,
-  subjectId,
-  schoolClassId,
+export function StudentFrequencyListTable({
+  schoolClass,
+  teacherId,
 }: StudentListProps) {
-  const schoolClass = await request<SchoolClass>(
-    `${process.env.NEXT_PUBLIC_API_URL}/teacher/${userId}/subject/${subjectId}/school-class/${schoolClassId}/students`,
-    {
-      next: {
-        revalidate: 300,
-        tags: [
-          `teacher-${userId}-subject-${subjectId}-school-class-${schoolClassId}-students`,
-        ],
-      },
-      cache: "no-cache",
-    }
-  );
+  const [date, setDate] = useState<Date>(new Date());
+  const [description, setDescription] = useState("");
+  const [students, setStudents] = useState<StudentDto[]>([]);
+
+  const { dialogRef } = useDialog();
+
+  const [isPending, startTransition] = useTransition();
 
   const tableRows = schoolClass.students?.data.map((student, idx) => ({
     id: student.id,
@@ -40,18 +36,87 @@ export async function StudentListTable({
       <input
         type="checkbox"
         className="toggle toggle-success [--tglbg:aliceblue] "
+        onChange={() => {
+          setStudents((prev) => {
+            const studentIndex = prev.findIndex((s) => s.id === student.id);
+
+            if (studentIndex === -1) {
+              return [...prev, student];
+            }
+
+            return prev.filter((s) => s.id !== student.id);
+          });
+        }}
+        checked={students.some((s) => s.id === student.id)}
       />
     ),
   }));
 
+  const handleSubmit = () => {
+    startTransition(async () => {
+      const formData = new FormData();
+
+      formData.append("date", date.toISOString());
+      formData.append("description", description);
+      formData.append("schoolClassId", schoolClass.id);
+      formData.append("teacherId", teacherId);
+      formData.append(
+        "students",
+        students.map((student) => student.id).join(",")
+      );
+
+      await frequency(formData);
+    });
+  };
+
   return (
-    <Table
-      headers={[
-        { key: "order", label: "Ordem da chamada", className: "w-2/6" },
-        { key: "studentName", label: "Nome do aluno", className: "w-4/6" },
-        { key: "presence", label: "Presença", className: "w-2/6" },
-      ]}
-      rows={tableRows}
-    />
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FormTextInput
+          type="date"
+          label="Selecione a data:"
+          value={date.toISOString().split("T")[0]}
+          onChange={(e) => setDate(new Date(e.target.value))}
+        />
+        <FormTextarea
+          type="text"
+          label="Assunto:"
+          placeholder="Tópico do dia"
+          className="w-full"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+
+      <Table
+        headers={[
+          { key: "order", label: "Ordem da chamada" },
+          {
+            key: "studentName",
+            label: "Nome do aluno",
+          },
+          { key: "presence", label: "Presença" },
+        ]}
+        rows={tableRows}
+      />
+
+      <div className="flex lg:justify-end md:justify-end justify-center">
+        <Button
+          className="mt-6"
+          onClick={() => dialogRef?.current?.showModal()}
+          disabled={isPending}
+        >
+          Lançar frequência
+        </Button>
+      </div>
+      <ConfirmationModal
+        dialogRef={dialogRef}
+        title="Lançar frequência"
+        description={`Tem certeza que deseja lançar a frequência do dia ${date.toLocaleDateString(
+          "pt-BR"
+        )} da turma ${schoolClass?.name}?`}
+        onSuccess={handleSubmit}
+      />
+    </>
   );
 }

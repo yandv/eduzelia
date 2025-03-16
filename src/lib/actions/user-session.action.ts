@@ -1,10 +1,10 @@
 import { cache } from "react";
 import { cookies } from "next/headers";
-import { UserDto } from "../database/dto/user.dto";
-import { CacheReturn } from "../utils/system";
+import { CacheReturn, request } from "../utils/system";
+import { TeacherDto } from "../database/dto/teacher.dto";
 
 interface LoggedSession {
-  user: UserDto;
+  user: TeacherDto;
   isLoggedIn: true;
 }
 
@@ -13,16 +13,17 @@ interface NotLoggedSession {
   isLoggedIn: false;
 }
 
-export const getUserSession = cache<CacheReturn<LoggedSession | NotLoggedSession>>(
-  async () => {
-    const cookie = (await cookies()).get("session")?.value;
+export const getUserSession = cache<
+  CacheReturn<LoggedSession | NotLoggedSession>
+>(async () => {
+  const sessionCookies = await cookies();
+  const cookie = sessionCookies.get("session")?.value;
 
-    if (cookie) {
-      const user: UserDto = JSON.parse(cookie);
+  if (cookie) {
+    const user: TeacherDto = JSON.parse(cookie);
 
-      return { user, isLoggedIn: true };
-    }
-
-    return { isLoggedIn: false };
+    return { user, isLoggedIn: true };
   }
-);
+
+  return { isLoggedIn: false };
+});

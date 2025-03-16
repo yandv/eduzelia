@@ -5,6 +5,7 @@ import { z } from "zod";
 import { prisma } from "../database/prisma";
 import { cookies } from "next/headers";
 import { FormState } from "../utils/system";
+import { revalidateTag } from "next/cache";
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: "O email precisa ser válido." }).trim(),
@@ -16,7 +17,7 @@ type LoginForm = z.infer<typeof loginFormSchema>;
 export async function createSession(
   _: FormState<LoginForm>,
   formData: FormData
-) {
+): Promise<FormState<LoginForm>> {
   const validatedFields = loginFormSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -61,5 +62,6 @@ export async function createSession(
     path: "/",
   });
 
+  revalidateTag("teacher");
   redirect("/");
 }

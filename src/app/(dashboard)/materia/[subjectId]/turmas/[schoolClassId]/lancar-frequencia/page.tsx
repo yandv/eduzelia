@@ -1,9 +1,11 @@
 import { getUserSession } from "@/lib/actions/user-session.action";
 import { BaseQueryParams } from "@/lib/utils/base-query-params";
-import { StudentListTable } from "./student-list-table";
+import { StudentFrequencyListTable } from "./student-list-table";
 import { Suspense } from "@/lib/components/Loading";
+import { request } from "@/lib/utils/system";
+import { SchoolClass } from "@/lib/database/dto/school-class.dto";
 
-export default async function UpdateFrequencyPage({
+export default async function FrequencyPage({
   params,
 }: BaseQueryParams<{ subjectId: string; schoolClassId: string }>) {
   const { user } = await getUserSession();
@@ -11,31 +13,49 @@ export default async function UpdateFrequencyPage({
 
   return (
     <>
-      <h1 className="lg:text-6xl md:text-5xl text-4xl text-sky-950 m-8 font-semibold">
-        Atualizar frequência
-      </h1>
-      <form action="" className="mx-8">
-        <label className="block text-sm font-medium text-gray-700">
-          Selecione a data:
-        </label>
-        <input
-          type="date"
-          className="input input-bordered w-full max-w-xs bg-slate-50 text-gray-900"
-          defaultValue={new Date().toISOString().split("T")[0]}
+      <Suspense>
+        <FrequencyPageLoader
+          userId={user?.id}
+          subjectId={subjectId}
+          schoolClassId={schoolClassId}
         />
-        <Suspense>
-          <StudentListTable
-            userId={user?.id}
-            subjectId={subjectId}
-            schoolClassId={schoolClassId}
-          />
-        </Suspense>
-        <div className="flex lg:justify-end md:justify-end justify-center">
-          <button className="btn text-white bg-sky-950 hover:bg-sky-900 mt-6 w-64 ">
-            Lançar frequência
-          </button>
-        </div>
-      </form>
+      </Suspense>
+    </>
+  );
+}
+
+interface FrequencyPageLoaderProps {
+  userId?: string;
+  subjectId: string;
+  schoolClassId: string;
+}
+
+async function FrequencyPageLoader({
+  userId,
+  subjectId,
+  schoolClassId,
+}: FrequencyPageLoaderProps) {
+  const schoolClass = await request<SchoolClass>(
+    `${process.env.NEXT_PUBLIC_API_URL}/teacher/${userId}/subject/${subjectId}/school-class/${schoolClassId}/students`,
+    {
+      next: {
+        revalidate: 300,
+        tags: [`students`],
+      },
+    }
+  );
+
+  return (
+    <>
+      <h2 className="text-2xl md:text-3xl lg:text-5xl text-sky-950 mt-6 font-semibold">
+        Frequência da turma {schoolClass.name}
+      </h2>
+      {userId && (
+        <StudentFrequencyListTable
+          schoolClass={schoolClass}
+          teacherId={userId}
+        />
+      )}
     </>
   );
 }

@@ -3,38 +3,38 @@
 import { createSchoolClass } from "@/lib/actions/create-school-class.action";
 import { Button } from "@/lib/components/ui/Button";
 import { useActionState, useState } from "react";
-import FormErrorMessage from "@/lib/components/form/FormErrorMessage";
-import FormFieldErrorMessage from "@/lib/components/form/FormFieldErrorMessage";
-import FormTextInput from "@/lib/components/form/FormTextInput";
-import Modal from "@/lib/components/ui/Modal";
+import FormErrorMessage from "@/lib/components/ui/form/FormErrorMessage";
+import FormFieldErrorMessage from "@/lib/components/ui/form/FormFieldErrorMessage";
+import FormTextInput from "@/lib/components/ui/form/FormTextInput";
+import Modal, { useDialog } from "@/lib/components/ui/modal/Modal";
 
 interface CreateSchoolClassProps {
   subjectId: string;
 }
 
 export function CreateSchoolClass({ subjectId }: CreateSchoolClassProps) {
-  const [visible, setVisible] = useState(false);
+  const { dialogRef } = useDialog();
   const [formState, action, isPending] = useActionState(
     createSchoolClass,
     undefined
   );
 
   const handleSubmit = (payload: FormData) => {
-    setVisible(false);
+    dialogRef?.current?.close();
     action(payload);
   };
 
-  const handleToggle = () => setVisible((prevState) => !prevState);
+  const handleToggle = () => dialogRef?.current?.showModal();
 
   const handleClose = () => {
-    setVisible(false);
+    dialogRef?.current?.close();
   };
 
   return (
     <>
       <Button onClick={handleToggle}>Criar turma</Button>
       <form action={handleSubmit}>
-        <Modal visible={visible} closeButton onClose={handleClose}>
+        <Modal dialogRef={dialogRef} onClose={handleClose}>
           <Modal.Title>Criar turma</Modal.Title>
           <Modal.Body>
             <div className="flex flex-col justify-center items-center">

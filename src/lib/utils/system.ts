@@ -2,7 +2,7 @@ export function request<T>(
   input: string | URL | globalThis.Request,
   init?: RequestInit
 ) {
-  return fetch(input, init).then<T>(async (response) => {
+  return fetch(input).then<T>(async (response) => {
     // await new Promise((resolve) => setTimeout(resolve, 500));
 
     if (!response.ok) {

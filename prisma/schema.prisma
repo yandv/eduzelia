@@ -51,8 +51,8 @@ model StudentSchoolClass {
   grades      Grade[]
   frequencies Frequency[]
 
-  student     Student     @relation(fields: [studentId], references: [id])
-  schoolClass SchoolClass @relation(fields: [schoolClassId], references: [id])
+  student     Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  schoolClass SchoolClass @relation(fields: [schoolClassId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, schoolClassId])
   @@map("student_classes")
@@ -78,7 +78,7 @@ model SchoolClass {
 
   sessions             Session[]
   studentSchoolClasses StudentSchoolClass[]
-  subject              Subject              @relation(fields: [subjectId], references: [id])
+  subject              Subject              @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
   @@unique([name, year])
   @@map("school_classes")
@@ -92,12 +92,12 @@ model Session {
   schoolClassId String
   teacherId     String
 
-  schoolClass SchoolClass @relation(fields: [schoolClassId], references: [id])
-  teacher     Teacher     @relation(fields: [teacherId], references: [id])
+  schoolClass SchoolClass @relation(fields: [schoolClassId], references: [id], onDelete: Cascade)
+  teacher     Teacher     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   frequencies Frequency[]
 
   @@unique([date, schoolClassId, teacherId])
-  @@map("aula")
+  @@map("sessions")
 }
 
 model Grade {
@@ -124,9 +124,9 @@ model Frequency {
   sessionId            String
   studentSchoolClassId String
 
-  session            Session            @relation(fields: [sessionId], references: [id])
-  studentSchoolClass StudentSchoolClass @relation(fields: [studentSchoolClassId], references: [id])
+  session            Session            @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  studentSchoolClass StudentSchoolClass @relation(fields: [studentSchoolClassId], references: [id], onDelete: Cascade)
 
   @@unique([sessionId, studentSchoolClassId])
-  @@map("frequencia")
+  @@map("student_frequencies")
 }

@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { SubjectDto } from "./subject.dto";
+import { PageCursorResponseDto } from "./pagination-cursor.dto";
+import { StudentDto } from "./student.dto";
 
 export const createSchoolClassSchema = z.object({
   name: z
@@ -17,4 +19,8 @@ export interface SchoolClassDto
   extends z.infer<typeof createSchoolClassSchema> {
   id: string;
   subject?: SubjectDto;
+}
+
+export interface SchoolClass extends SchoolClassDto {
+  students: PageCursorResponseDto<StudentDto>;
 }
